@@ -14,8 +14,21 @@
 button {
   padding: 4px;
   font-size: 18px;
+  margin-bottom: 20px;
 }
 
 button + button {
   margin-left: 20px;
+}
+
+.wrong {
+  font-size: 24px;
+  color: crimson;
+  text-align: center;
+}
+
+.correct {
+  font-size: 24px;
+  color: chartreuse;
+  text-align: center;
 }

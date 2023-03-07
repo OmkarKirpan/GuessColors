@@ -21,11 +21,11 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
+        with:
+          version: 6
 
       - name: Install dependencies
         run: pnpm install
-        with:
-          version: 6
 
       - name: Build project
         run: npm run build

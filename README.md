@@ -41,3 +41,9 @@ If you want to run this project locally, you can follow these steps:
 ## Deployment
 
 The project is automatically deployed to GitHub Pages when changes are pushed to the main branch.
+
+## Author
+
+This project was created by Omkar Kirpan.
+
+Feel free to contribute or report issues on the [GitHub repository](https://github.com/omkarkirpan/GuessColors).

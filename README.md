@@ -2,7 +2,7 @@
 
 This is a simple color guessing game built with React.js and Vite.js. The game is deployed on GitHub Pages and can be played [here](https://omkarkirpan.github.io/GuessColors/).
 
-## How to Play
+## 🕹️How to Play
 
 - You will be presented with a colored box.
 - Three color options will be displayed as buttons.
@@ -21,6 +21,7 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 ## Development
 
 If you want to run this project locally, you can follow these steps:
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/omkarkirpan/GuessColors.git

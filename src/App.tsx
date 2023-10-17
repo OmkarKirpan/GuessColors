@@ -43,7 +43,7 @@ function App() {
   return (
     <div className="App">
       <div>
-        <div className="guess-me" style={{ background: color }}></div>
+        <div data-testid="guess-me" className="guess-me" style={{ background: color }}></div>
 
         {answers.map((answer, index) => (
           <button onClick={() => handleAnswerClicked(answer)} key={index}>

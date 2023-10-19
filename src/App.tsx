@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const generateRandomColor = () => {
+export const generateRandomColor = () => {
   return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 };
 

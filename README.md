@@ -11,7 +11,7 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 - If you select the wrong color, you will see a "Wrong Answer" message.
 - Keep playing to test your color recognition skills!
 
-## Technologies Used
+## 💻Technologies Used
 
 - React.js
 - Vite.js

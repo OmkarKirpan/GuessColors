@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const generateRandomColor = () => {
+export const generateRandomColor = () => {
   return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 };
 
@@ -43,7 +43,7 @@ function App() {
   return (
     <div className="App">
       <div>
-        <div className="guess-me" style={{ background: color }}></div>
+        <div data-testid="guess-me" className="guess-me" style={{ background: color }}></div>
 
         {answers.map((answer, index) => (
           <button onClick={() => handleAnswerClicked(answer)} key={index}>

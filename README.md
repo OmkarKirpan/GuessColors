@@ -39,7 +39,7 @@ If you want to run this project locally, you can follow these steps:
    npm run dev
    ```
 
-## Deployment
+## 💻Deployment
 
 The project is automatically deployed to GitHub Pages when changes are pushed to the main branch.
 

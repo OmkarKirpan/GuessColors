@@ -18,7 +18,7 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 - HTML/CSS
 - Node.js
 
-## Development
+## 🖥️Development
 
 If you want to run this project locally, you can follow these steps:
 

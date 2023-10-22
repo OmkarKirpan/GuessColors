@@ -2,6 +2,8 @@ import { render, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import App, { generateRandomColor } from "../App";
 
+const buttonColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
 // Helper function to convert RGB to Hex
 function rgbToHex(rgb) {
   // Choose correct separator
@@ -49,10 +51,10 @@ test("checks for correct answer", () => {
 });
 
 test("checks for wrong answer", () => {
-  const { getByTestId, getByText, queryByText, getAllByRole} = render(<App />);
+  const { getByTestId, getByText, queryByText, getAllByText} = render(<App />);
   const guessMe = getByTestId("guess-me");
   const color = guessMe.style.background;
-  const answers = getAllByRole('button')
+  const answers = getAllByText(buttonColorRegex)
   const incorrectAnswer = Array.from(answers).find(
     (ans) => ans.innerHTML.toUpperCase() !== rgbToHex(color).toUpperCase()
   );

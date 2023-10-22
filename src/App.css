@@ -1,34 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;500;600;700;800;900&display=swap");
+
+:root {
+  --fontfamily: "Raleway", sans-serif;
+  --white: rgb(255, 255, 255);
+  --button: rgb(163, 89, 231);
+  --text: rgba(0, 0, 0, 0.568);
+  --wrong: rgb(243, 12, 58);
+  --redlight: rgba(220, 20, 60, 0.342);
+  --right: rgb(113, 221, 4);
+  --greenlight: rgba(113, 221, 4, 0.342);
+}
+html,
+body {
+  margin: 0%;
+  padding: 0%;
+  font-family: var(--fontfamily);
+}
+
 .App {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  font-family: var(--fontfamily);
+  font-weight: bold;
+  width: 100vw;
+  height: 100vh;
+}
+.main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  padding: 3% 0%;
+  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  border-width: 5px;
+  border-style: solid;
+}
+h1 {
+  margin: 0%;
+  padding: 2%;
+  color: var(--text);
+  text-align: center;
+}
+button {
+  padding: 1.5%;
+  margin: 2%;
+  border: 2px solid var(--button);
+  font-size: larger;
+  height: fit-content;
+  border-radius: 10px;
+  font-family: var(--fontfamily);
+  background-color: var(--button);
+  color: var(--white);
+  font-weight: bold;
+}
+button:active {
+  background-color: var(--white);
+  border: 2px solid var(--button);
+  color: var(--button);
 }
 
 .guess-me {
-  width: 330px;
-  height: 200px;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
 }
 
-button {
-  padding: 4px;
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-button + button {
-  margin-left: 20px;
-}
-
-.wrong {
-  font-size: 24px;
-  color: crimson;
+p {
   text-align: center;
+  width: 45%;
+  margin: auto;
 }
-
 .correct {
-  font-size: 24px;
-  color: chartreuse;
+  color: var(--right);
+  font-weight: bold;
+  padding: 5%;
+  background-color: var(--greenlight);
+  border-radius: 10px;
+  border: 2px solid var(--right);
+}
+.wrong {
+  color: var(--wrong);
+  padding: 5%;
+  background-color: var(--redlight);
+  border-radius: 10px;
+  border: 2px solid var(--wrong);
+}
+h3 {
   text-align: center;
+  color: var(--text);
+  font-size: 1.5rem;
+}
+.congo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100vh;
 }

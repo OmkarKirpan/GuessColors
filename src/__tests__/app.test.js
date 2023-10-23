@@ -1,6 +1,14 @@
 import { render, fireEvent } from "@testing-library/react";
-import '@testing-library/jest-dom'
+import "@testing-library/jest-dom";
 import App, { generateRandomColor } from "../App";
+
+jest.mock("../sounds/correct.wav", () => ({
+  default: "correct.wav",
+}));
+
+jest.mock("../sounds/wrong.wav", () => ({
+  default: "wrong.wav",
+}));
 
 // Helper function to convert RGB to Hex
 function rgbToHex(rgb) {
@@ -49,16 +57,54 @@ test("checks for correct answer", () => {
 });
 
 test("checks for wrong answer", () => {
-  const { getByTestId, getByText, queryByText, getAllByRole} = render(<App />);
+  const { getByTestId, getByText, queryByText, getAllByRole } = render(<App />);
   const guessMe = getByTestId("guess-me");
   const color = guessMe.style.background;
-  const answers = getAllByRole('button')
+  const answers = getAllByRole("button");
   const incorrectAnswer = Array.from(answers).find(
     (ans) => ans.innerHTML.toUpperCase() !== rgbToHex(color).toUpperCase()
   );
-  
+
   fireEvent.click(getByText(incorrectAnswer.innerHTML));
 
   expect(queryByText("Wrong Answer")).toBeInTheDocument();
 });
 
+test("plays correct sound on correct answer", () => {
+  const { getByTestId, getByText } = render(<App />);
+  const guessMe = getByTestId("guess-me");
+  const color = guessMe.style.background;
+  const hexColor = rgbToHex(color);
+
+  // Spy on the Audio constructor to check if it's called
+  jest.spyOn(window, "Audio").mockImplementation(() => ({
+    play: jest.fn(),
+  }));
+
+  fireEvent.click(getByText(hexColor.toUpperCase()));
+
+  // Verify that the correct sound is played
+  expect(window.Audio).toHaveBeenCalledWith("correct.wav");
+  expect(window.Audio.prototype.play).toHaveBeenCalled();
+});
+
+test("plays wrong sound on wrong answer", () => {
+  const { getByTestId, getByText, getAllByRole } = render(<App />);
+  const guessMe = getByTestId("guess-me");
+  const color = guessMe.style.background;
+  const answers = getAllByRole("button");
+  const incorrectAnswer = Array.from(answers).find(
+    (ans) => ans.innerHTML.toUpperCase() !== rgbToHex(color).toUpperCase()
+  );
+
+  // Spy on the Audio constructor to check if it's called
+  jest.spyOn(window, "Audio").mockImplementation(() => ({
+    play: jest.fn(),
+  }));
+
+  fireEvent.click(getByText(incorrectAnswer.innerHTML));
+
+  // Verify that the wrong sound is played
+  expect(window.Audio).toHaveBeenCalledWith("wrong.wav");
+  expect(window.Audio.prototype.play).toHaveBeenCalled();
+});

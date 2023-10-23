@@ -47,8 +47,17 @@ function App() {
     }
   }
 
+  function changeTheme(){
+    document.body.classList.toggle("darkmode");
+  }
+
+
   return (
     <div className="App">
+      <button
+      className="theme-button"
+      onClick={changeTheme}
+      >Change Theme</button>
       <div>
         <div
           data-testid="guess-me"

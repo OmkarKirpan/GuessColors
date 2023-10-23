@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-
+    name: node test
     runs-on: ubuntu-latest
 
     strategy:

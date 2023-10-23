@@ -1,4 +1,4 @@
-# Guess the Colors Game
+# Guess the Colors Game [![Node.js CI](https://github.com/OmkarKirpan/GuessColors/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/OmkarKirpan/GuessColors/actions/workflows/node.js.yml)
 
 This is a simple color guessing game built with React.js and Vite.js. The game is deployed on GitHub Pages and can be played [here](https://omkarkirpan.github.io/GuessColors/).
 

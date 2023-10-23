@@ -1,22 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;500;600;700;800;900&display=swap");
-
-:root {
+:root{
+  --background: #FFF;
+  --font: #000
   --fontfamily: "Raleway", sans-serif;
-  --white: rgb(255, 255, 255);
+  --white:rgb(255, 255, 255);
   --button: rgb(163, 89, 231);
-  --text: rgba(0, 0, 0, 0.568);
-  --wrong: rgb(243, 12, 58);
-  --redlight: rgba(220, 20, 60, 0.342);
-  --right: rgb(113, 221, 4);
-  --greenlight: rgba(113, 221, 4, 0.342);
+  --text: rgba(0, 0, 0, 0.733);
+  --wrong:rgb(243, 12, 58);
+  --redlight:rgba(220, 20, 60, 0.342);
+  --right:rgb(113, 221, 4);
+  --greenlight:rgba(113, 221, 4, 0.342);
 }
 html,
 body {
   margin: 0%;
   padding: 0%;
-  font-family: var(--fontfamily);
+  font-family: raleway;
+  box-sizing: border-box;
 }
-
 .App {
   font-family: var(--fontfamily);
   font-weight: bold;
@@ -42,10 +43,9 @@ h1 {
   text-align: center;
 }
 button {
-  padding: 1.5%;
+  padding: 2%;
   margin: 2%;
   border: 2px solid var(--button);
-  font-size: larger;
   height: fit-content;
   border-radius: 10px;
   font-family: var(--fontfamily);
@@ -54,10 +54,11 @@ button {
   font-weight: bold;
 }
 button:active {
-  background-color: var(--white);
+  background-color:var(--white);
   border: 2px solid var(--button);
   color: var(--button);
 }
+
 
 .guess-me {
   display: flex;
@@ -66,21 +67,23 @@ button:active {
   height: 70%;
 }
 
+
 p {
   text-align: center;
   width: 45%;
   margin: auto;
 }
-.correct {
+.correct{
   color: var(--right);
   font-weight: bold;
   padding: 5%;
   background-color: var(--greenlight);
   border-radius: 10px;
   border: 2px solid var(--right);
+ 
 }
-.wrong {
-  color: var(--wrong);
+.wrong{
+  color:var(--wrong);
   padding: 5%;
   background-color: var(--redlight);
   border-radius: 10px;
@@ -89,12 +92,66 @@ p {
 h3 {
   text-align: center;
   color: var(--text);
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
-.congo {
+.congo{
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   height: 100vh;
 }
+
+
+/* .darkmode{
+  --background: #1b1c25;
+  --font: #ffffff
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: var(--background);
+  color: var(--font);
+}
+
+.guess-me {
+  width: 340px;
+  height: 200px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+button {
+  padding: 6px 12px;
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--font);
+  background: rgba(126, 126, 126, 0.1);
+  border: 1px solid grey;
+  border-radius: 4px;
+}
+
+button + button {
+  margin-left: 20px;
+}
+
+.wrong {
+  font-size: 24px;
+  color: crimson;
+  text-align: center;
+}
+
+.correct {
+  font-size: 24px;
+  color: chartreuse;
+  text-align: center;
+}
+
+.theme-button{
+  position: absolute;
+  top: 30px;
+  right: 30px;
+} */

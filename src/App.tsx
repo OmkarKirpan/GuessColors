@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+import correctSound from "../sounds/correctSound.wav";
+import incorrectSound from "../sounds/wrongSound.wav";
+
 export const generateRandomColor = () => {
   return "#" + Math.floor(Math.random() * 0xffffff).toString(16);
 };
@@ -34,9 +37,13 @@ function App() {
       console.log("Correct answer");
       setResult(Result.Correct);
       generateRandomColors();
+      const audio = new Audio(correctSound);
+      audio.play();
     } else {
       console.log("Wrong answer");
       setResult(Result.Wrong);
+      const audio = new Audio(incorrectSound);
+      audio.play();
     }
   }
 
@@ -52,7 +59,11 @@ function App() {
       onClick={changeTheme}
       >Change Theme</button>
       <div>
-        <div data-testid="guess-me" className="guess-me" style={{ background: color }}></div>
+        <div
+          data-testid="guess-me"
+          className="guess-me"
+          style={{ background: color }}
+        ></div>
 
         {answers.map((answer, index) => (
           <button onClick={() => handleAnswerClicked(answer)} key={index}>

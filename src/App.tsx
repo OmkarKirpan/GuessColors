@@ -18,12 +18,19 @@ function App() {
   const [result, setResult] = useState<Result | undefined>(undefined);
 
   const generateRandomColors = () => {
-    let actualColor = generateRandomColor();
+    const actualColor = generateRandomColor();
+    const distractorColors = new Set<string>();
+
+    while (distractorColors.size < 2) {
+      const candidate = generateRandomColor();
+      if (candidate !== actualColor && !distractorColors.has(candidate)) {
+        distractorColors.add(candidate);
+      }
+    }
+
     setColor(actualColor);
     setAnswers(
-      [actualColor, generateRandomColor(), generateRandomColor()].sort(
-        () => 0.5 - Math.random()
-      )
+      [actualColor, ...distractorColors].sort(() => 0.5 - Math.random())
     );
   };
 

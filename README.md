@@ -61,6 +61,10 @@ pnpm run test:coverage   # run the test suite with a coverage report
 
 The project is automatically deployed to GitHub Pages when changes are pushed to the main branch.
 
+## 📝Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for a history of notable changes.
+
 ## ✒️Author
 
 This project was created by Omkar Kirpan.

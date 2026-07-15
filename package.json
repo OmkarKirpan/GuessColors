@@ -23,5 +23,20 @@
     "@vitejs/plugin-react": "^3.1.0",
     "typescript": "^4.9.5",
     "vite": "^4.1.4"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/main.tsx",
+      "!src/vite-env.d.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 90,
+        "branches": 90,
+        "functions": 90,
+        "lines": 90
+      }
+    }
   }
 }

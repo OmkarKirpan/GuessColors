@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { generateRandomColor } from "../utils/color";
+import { shuffleArray } from "../utils/array";
 import { Result } from "../types";
 
 export function useGuessColorsGame() {
@@ -19,9 +20,7 @@ export function useGuessColorsGame() {
     }
 
     setColor(actualColor);
-    setAnswers(
-      [actualColor, ...distractorColors].sort(() => 0.5 - Math.random())
-    );
+    setAnswers(shuffleArray([actualColor, ...distractorColors]));
   };
 
   useEffect(() => {

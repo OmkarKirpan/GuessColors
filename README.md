@@ -32,11 +32,11 @@ If you want to run this project locally, you can follow these steps:
    ```
 3. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 4. Start the development server:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 ## 💻Deployment

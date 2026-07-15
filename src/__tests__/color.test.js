@@ -1,7 +1,7 @@
 import { generateRandomColor } from "../utils/color";
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 test("generates a random color", () => {
@@ -12,7 +12,7 @@ test("generates a random color", () => {
 test("pads short hex values to a full 6-digit color", () => {
   // A small random draw used to produce fewer than 6 hex digits (e.g. "#a7"
   // instead of "#0000a7"), mismatching the color box against its button label.
-  jest.spyOn(Math, "random").mockReturnValue(0.00001);
+  vi.spyOn(Math, "random").mockReturnValue(0.00001);
 
   const color = generateRandomColor();
 

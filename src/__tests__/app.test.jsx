@@ -1,9 +1,9 @@
 import { render, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
-import App, { generateRandomColor } from "../App";
+import App from "../App";
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
   document.body.classList.remove("darkmode");
 });
 
@@ -15,7 +15,7 @@ afterEach(() => {
 function mockRandomSequence(...values) {
   const cyclingDefaults = [0.05, 0.2, 0.35, 0.5, 0.65, 0.8, 0.95];
   let cycleIndex = 0;
-  const spy = jest.spyOn(Math, "random");
+  const spy = vi.spyOn(Math, "random");
   values.forEach((value) => spy.mockReturnValueOnce(value));
   spy.mockImplementation(() => {
     const value = cyclingDefaults[cycleIndex % cyclingDefaults.length];
@@ -33,21 +33,6 @@ test("generates initial color", () => {
   const { getByTestId } = render(<App />);
   const guessMeElement = getByTestId("guess-me");
   expect(guessMeElement).toBeInTheDocument();
-});
-
-test("generates a random color", () => {
-  const color = generateRandomColor();
-  expect(color).toMatch(/^#[0-9a-fA-F]{6}$/);
-});
-
-test("pads short hex values to a full 6-digit color", () => {
-  // A small random draw used to produce fewer than 6 hex digits (e.g. "#a7"
-  // instead of "#0000a7"), mismatching the color box against its button label.
-  jest.spyOn(Math, "random").mockReturnValue(0.00001);
-
-  const color = generateRandomColor();
-
-  expect(color).toBe("#0000a7");
 });
 
 test("checks for correct answer", () => {

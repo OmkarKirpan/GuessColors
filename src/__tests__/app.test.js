@@ -2,25 +2,9 @@ import { render, fireEvent } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import App, { generateRandomColor } from "../App";
 
-const buttonColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-
-// Helper function to convert RGB to Hex
-function rgbToHex(rgb) {
-  // Choose correct separator
-  let sep = rgb.indexOf(",") > -1 ? "," : " ";
-  // Turn "rgb(r,g,b)" into [r,g,b]
-  rgb = rgb.substr(4).split(")")[0].split(sep);
-
-  let r = (+rgb[0]).toString(16),
-    g = (+rgb[1]).toString(16),
-    b = (+rgb[2]).toString(16);
-
-  if (r.length === 1) r = "0" + r;
-  if (g.length === 1) g = "0" + g;
-  if (b.length === 1) b = "0" + b;
-
-  return "#" + r + g + b;
-}
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 test("renders without crashing", () => {
   render(<App />);
@@ -37,30 +21,42 @@ test("generates a random color", () => {
   expect(color).toMatch(/^#[0-9a-fA-F]{6}$/);
 });
 
+test("pads short hex values to a full 6-digit color", () => {
+  // A small random draw used to produce fewer than 6 hex digits (e.g. "#a7"
+  // instead of "#0000a7"), mismatching the color box against its button label.
+  jest.spyOn(Math, "random").mockReturnValue(0.00001);
+
+  const color = generateRandomColor();
+
+  expect(color).toBe("#0000a7");
+});
+
 test("checks for correct answer", () => {
-  const { getByTestId, getByText, queryByText } = render(<App />);
-  const guessMe = getByTestId("guess-me");
-  const color = guessMe.style.background;
+  jest
+    .spyOn(Math, "random")
+    .mockReturnValueOnce(0.1) // actual color -> #199999
+    .mockReturnValueOnce(0.5) // distractor -> #7fffff
+    .mockReturnValueOnce(0.9) // distractor -> #e66665
+    .mockReturnValue(0.5); // makes the shuffle comparator a no-op
 
-  // Convert color to hex
-  const hexColor = rgbToHex(color);
+  const { getByText, queryByText } = render(<App />);
 
-  fireEvent.click(getByText(hexColor.toUpperCase()));
+  fireEvent.click(getByText("#199999"));
 
   expect(queryByText("Correct!")).toBeInTheDocument();
 });
 
 test("checks for wrong answer", () => {
-  const { getByTestId, getByText, queryByText, getAllByText} = render(<App />);
-  const guessMe = getByTestId("guess-me");
-  const color = guessMe.style.background;
-  const answers = getAllByText(buttonColorRegex)
-  const incorrectAnswer = Array.from(answers).find(
-    (ans) => ans.innerHTML.toUpperCase() !== rgbToHex(color).toUpperCase()
-  );
-  
-  fireEvent.click(getByText(incorrectAnswer.innerHTML));
+  jest
+    .spyOn(Math, "random")
+    .mockReturnValueOnce(0.1) // actual color -> #199999
+    .mockReturnValueOnce(0.5) // distractor -> #7fffff
+    .mockReturnValueOnce(0.9) // distractor -> #e66665
+    .mockReturnValue(0.5); // makes the shuffle comparator a no-op
+
+  const { getByText, queryByText } = render(<App />);
+
+  fireEvent.click(getByText("#7FFFFF"));
 
   expect(queryByText("Wrong Answer")).toBeInTheDocument();
 });
-

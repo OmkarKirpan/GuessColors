@@ -13,10 +13,11 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 
 ## 💻Technologies Used
 
-- React.js
-- Vite.js
-- HTML/CSS
-- Node.js
+- React
+- TypeScript
+- Vite
+- Vitest + React Testing Library
+- pnpm
 
 ## 🖥️Development
 
@@ -38,6 +39,23 @@ If you want to run this project locally, you can follow these steps:
    ```bash
    pnpm run dev
    ```
+
+### Other useful commands
+
+```bash
+pnpm run build           # type-check and build for production
+pnpm run preview         # preview the production build locally
+pnpm test                # run the test suite
+pnpm run test:coverage   # run the test suite with a coverage report
+```
+
+## 📂Project Structure
+
+- `src/hooks/useGuessColorsGame.ts` — game state and logic (color generation, answer checking)
+- `src/components/` — presentational components (`ColorSwatch`, `AnswerOptions`, `ResultMessage`, `ThemeToggle`)
+- `src/utils/color.ts` — random color generation
+- `src/types.ts` — shared types
+- `src/App.tsx` — composes the hook and components together
 
 ## 💻Deployment
 

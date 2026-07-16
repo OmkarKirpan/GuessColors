@@ -1,11 +1,13 @@
-import { test, expect } from "@playwright/test";
-import { gotoHome, findAnswerButtons } from "./utils";
+import { expect, test } from "@playwright/test";
+import { findAnswerButtons, gotoHome } from "./utils";
 
 test("renders a color swatch and three answer buttons", async ({ page }) => {
   await gotoHome(page);
 
   await expect(page.getByTestId("guess-me")).toBeVisible();
-  await expect(page.getByRole("button", { name: /^#[0-9A-F]{6}$/ })).toHaveCount(3);
+  await expect(
+    page.getByRole("button", { name: /^#[0-9A-F]{6}$/ }),
+  ).toHaveCount(3);
 });
 
 test("clicking the correct answer shows the result and starts a new round", async ({
@@ -15,7 +17,7 @@ test("clicking the correct answer shows the result and starts a new round", asyn
 
   const swatch = page.getByTestId("guess-me");
   const initialBackground = await swatch.evaluate(
-    (el) => getComputedStyle(el).backgroundColor
+    (el) => getComputedStyle(el).backgroundColor,
   );
   const { correct } = await findAnswerButtons(page);
 

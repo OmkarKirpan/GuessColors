@@ -1,5 +1,5 @@
-import { render, fireEvent } from "@testing-library/react";
-import '@testing-library/jest-dom'
+import { fireEvent, render } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import App from "../App";
 
 afterEach(() => {
@@ -16,7 +16,9 @@ function mockRandomSequence(...values) {
   const cyclingDefaults = [0.05, 0.2, 0.35, 0.5, 0.65, 0.8, 0.95];
   let cycleIndex = 0;
   const spy = vi.spyOn(Math, "random");
-  values.forEach((value) => spy.mockReturnValueOnce(value));
+  values.forEach((value) => {
+    spy.mockReturnValueOnce(value);
+  });
   spy.mockImplementation(() => {
     const value = cyclingDefaults[cycleIndex % cyclingDefaults.length];
     cycleIndex += 1;
@@ -39,7 +41,7 @@ test("checks for correct answer", () => {
   mockRandomSequence(
     0.1, // actual color -> #199999
     0.5, // distractor -> #7fffff
-    0.9 // distractor -> #e66665
+    0.9, // distractor -> #e66665
   );
 
   const { getByText, queryByText } = render(<App />);
@@ -53,7 +55,7 @@ test("checks for wrong answer", () => {
   mockRandomSequence(
     0.1, // actual color -> #199999
     0.5, // distractor -> #7fffff
-    0.9 // distractor -> #e66665
+    0.9, // distractor -> #e66665
   );
 
   const { getByText, queryByText } = render(<App />);
@@ -81,7 +83,7 @@ test("does not render duplicate answer colors when random draws collide", () => 
     0.1, // candidate collides with actual, rejected
     0.5, // distractor -> #7fffff
     0.5, // candidate collides with the distractor above, rejected
-    0.9 // distractor -> #e66665
+    0.9, // distractor -> #e66665
   );
 
   const { getAllByText } = render(<App />);
@@ -97,7 +99,7 @@ test("starts a new round immediately after a correct answer", () => {
   mockRandomSequence(
     0.1, // round 1 actual -> #199999
     0.5, // round 1 distractor -> #7fffff
-    0.9 // round 1 distractor -> #e66665
+    0.9, // round 1 distractor -> #e66665
   );
 
   const { getByText, queryByText, getByTestId } = render(<App />);
@@ -106,16 +108,14 @@ test("starts a new round immediately after a correct answer", () => {
   fireEvent.click(getByText("#199999"));
 
   expect(queryByText("Correct!")).toBeInTheDocument();
-  expect(getByTestId("guess-me").style.background).not.toBe(
-    initialBackground
-  );
+  expect(getByTestId("guess-me").style.background).not.toBe(initialBackground);
 });
 
 test("keeps the same round after a wrong answer, and can recover on the next guess", () => {
   mockRandomSequence(
     0.1, // actual -> #199999
     0.5, // distractor -> #7fffff
-    0.9 // distractor -> #e66665
+    0.9, // distractor -> #e66665
   );
 
   const { getByText, queryByText, getByTestId } = render(<App />);
@@ -125,7 +125,7 @@ test("keeps the same round after a wrong answer, and can recover on the next gue
 
   expect(queryByText("Wrong Answer")).toBeInTheDocument();
   expect(getByTestId("guess-me").style.background).toBe(
-    backgroundBeforeWrongGuess
+    backgroundBeforeWrongGuess,
   );
   expect(getByText("#199999")).toBeInTheDocument();
 

@@ -9,14 +9,14 @@ export function ResultMessage({ result }: ResultMessageProps) {
     result === Result.Correct
       ? "correct"
       : result === Result.Wrong
-      ? "wrong"
-      : undefined;
+        ? "wrong"
+        : undefined;
   const message =
     result === Result.Correct
       ? "Correct!"
       : result === Result.Wrong
-      ? "Wrong Answer"
-      : "";
+        ? "Wrong Answer"
+        : "";
 
   return (
     <div role="status" className={className}>

@@ -20,7 +20,7 @@ async function getSwatchRgb(page: Page): Promise<[number, number, number]> {
   const rgbString = await page
     .getByTestId("guess-me")
     .evaluate((el) => getComputedStyle(el).backgroundColor);
-  const [r, g, b] = rgbString.match(/\d+/g)!.map(Number);
+  const [r, g, b] = (rgbString.match(/\d+/g) ?? []).map(Number);
   return [r, g, b];
 }
 
@@ -32,7 +32,7 @@ async function getSwatchRgb(page: Page): Promise<[number, number, number]> {
 // property key suffixes) on every fresh page load, consuming values ahead of
 // the app's own hook in a way a plain queued mock doesn't account for.
 export async function findAnswerButtons(
-  page: Page
+  page: Page,
 ): Promise<{ correct: Locator; wrong: Locator }> {
   const buttons = page.getByRole("button", { name: /^#[0-9A-F]{6}$/ });
   const swatchRgb = await getSwatchRgb(page);

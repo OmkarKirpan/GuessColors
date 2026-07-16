@@ -1,7 +1,7 @@
 export type Stats = {
   highScore: number;
   bestStreak: number;
-  bestLevel: number;
+  xp: number;
   unlockedAchievements: string[];
 };
 
@@ -9,7 +9,7 @@ const STORAGE_KEY = "guessColors.stats";
 const DEFAULT_STATS: Stats = {
   highScore: 0,
   bestStreak: 0,
-  bestLevel: 1,
+  xp: 0,
   unlockedAchievements: [],
 };
 
@@ -31,13 +31,15 @@ export function loadStats(): Stats {
       return DEFAULT_STATS;
     }
 
-    // `bestLevel` and `unlockedAchievements` were added later; tolerate saves
-    // that predate them by falling back to the defaults for missing/invalid
-    // fields instead of discarding the whole record.
-    const bestLevel =
-      typeof parsed.bestLevel === "number" && parsed.bestLevel >= 1
-        ? parsed.bestLevel
-        : DEFAULT_STATS.bestLevel;
+    // `xp` and `unlockedAchievements` were added later; tolerate saves that
+    // predate them by falling back to the defaults for missing/invalid fields
+    // instead of discarding the whole record. (An earlier build stored
+    // `bestLevel` instead of `xp`; it is simply ignored — level is now derived
+    // from the persisted xp.)
+    const xp =
+      typeof parsed.xp === "number" && parsed.xp >= 0
+        ? parsed.xp
+        : DEFAULT_STATS.xp;
     const unlockedAchievements =
       Array.isArray(parsed.unlockedAchievements) &&
       parsed.unlockedAchievements.every((id) => typeof id === "string")
@@ -47,7 +49,7 @@ export function loadStats(): Stats {
     return {
       highScore: parsed.highScore,
       bestStreak: parsed.bestStreak,
-      bestLevel,
+      xp,
       unlockedAchievements,
     };
   } catch {

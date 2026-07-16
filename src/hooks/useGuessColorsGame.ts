@@ -24,8 +24,10 @@ export function useGuessColorsGame() {
   const [result, setResult] = useState<Result | undefined>(undefined);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
-  const [xp, setXp] = useState(0);
   const [stats, setStats] = useState(() => loadStats());
+  // XP (and therefore level and difficulty) is long-term progression that
+  // persists across sessions, unlike the per-session score and streak.
+  const [xp, setXp] = useState(() => stats.xp);
   const [shakeTrigger, setShakeTrigger] = useState(0);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [levelUpTrigger, setLevelUpTrigger] = useState(0);
@@ -44,6 +46,10 @@ export function useGuessColorsGame() {
   // key off a distinct value even when the underlying content repeats.
   const eventIdRef = useRef(0);
 
+  // Difficulty for the very first round, derived once from the persisted level
+  // so returning players resume at their level instead of restarting easy.
+  const startDifficultyRef = useRef(Math.max(0, level - 1));
+
   const generateRound = useCallback((difficulty: number) => {
     const actualColor = generateRandomColor();
     const distractorColors = new Set<string>();
@@ -59,9 +65,10 @@ export function useGuessColorsGame() {
     setAnswers(shuffleArray([actualColor, ...distractorColors]));
   }, []);
 
-  // Level 1 (difficulty 0) leaves the base color generation untouched.
+  // Level 1 (difficulty 0) leaves the base color generation untouched; a
+  // returning player at a higher level starts at their earned difficulty.
   useEffect(() => {
-    generateRound(0);
+    generateRound(startDifficultyRef.current);
   }, [generateRound]);
 
   const handleAnswerClicked = useCallback(
@@ -111,7 +118,7 @@ export function useGuessColorsGame() {
       const nextStats = {
         highScore: Math.max(stats.highScore, nextScore),
         bestStreak,
-        bestLevel: Math.max(stats.bestLevel, nextLevel),
+        xp: nextXp,
         unlockedAchievements: newUnlocks.length
           ? [...stats.unlockedAchievements, ...newUnlocks]
           : stats.unlockedAchievements,
@@ -163,7 +170,6 @@ export function useGuessColorsGame() {
     levelProgress,
     highScore: stats.highScore,
     bestStreak: stats.bestStreak,
-    bestLevel: stats.bestLevel,
     unlockedAchievements: stats.unlockedAchievements,
     shakeTrigger,
     confettiTrigger,

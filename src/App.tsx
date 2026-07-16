@@ -1,4 +1,5 @@
 import { MotionConfig } from "motion/react";
+import { AchievementsBar } from "./components/AchievementsBar";
 import { AchievementToast } from "./components/AchievementToast";
 import { AnswerOptions } from "./components/AnswerOptions";
 import { ColorSwatch } from "./components/ColorSwatch";
@@ -7,6 +8,7 @@ import { FloatingScore } from "./components/FloatingScore";
 import { ResultMessage } from "./components/ResultMessage";
 import { ScoreBoard } from "./components/ScoreBoard";
 import { SoundToggle } from "./components/SoundToggle";
+import { SuccessPulse } from "./components/SuccessPulse";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { XpBar } from "./components/XpBar";
 import { useGuessColorsGame } from "./hooks/useGuessColorsGame";
@@ -28,6 +30,7 @@ function App() {
     pointsAwarded,
     lastAnswer,
     earnedAchievement,
+    unlockedAchievements,
     handleAnswerClicked,
   } = useGuessColorsGame();
 
@@ -51,6 +54,7 @@ function App() {
           />
           <div className="relative w-full">
             <ColorSwatch color={color} shakeTrigger={shakeTrigger} />
+            <SuccessPulse trigger={pointsAwarded?.id ?? 0} />
             <FloatingScore points={pointsAwarded} />
           </div>
           <AnswerOptions
@@ -59,6 +63,7 @@ function App() {
             onSelect={handleAnswerClicked}
           />
           <ResultMessage result={result} />
+          <AchievementsBar unlocked={unlockedAchievements} />
         </main>
         <AchievementToast achievement={earnedAchievement} />
       </div>

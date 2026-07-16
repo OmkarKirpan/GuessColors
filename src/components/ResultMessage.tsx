@@ -5,11 +5,22 @@ type ResultMessageProps = {
 };
 
 export function ResultMessage({ result }: ResultMessageProps) {
-  if (result === Result.Correct) {
-    return <div className="correct">Correct!</div>;
-  }
-  if (result === Result.Wrong) {
-    return <div className="wrong">Wrong Answer</div>;
-  }
-  return null;
+  const className =
+    result === Result.Correct
+      ? "correct"
+      : result === Result.Wrong
+      ? "wrong"
+      : undefined;
+  const message =
+    result === Result.Correct
+      ? "Correct!"
+      : result === Result.Wrong
+      ? "Wrong Answer"
+      : "";
+
+  return (
+    <div role="status" className={className}>
+      {message}
+    </div>
+  );
 }

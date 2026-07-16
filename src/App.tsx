@@ -12,11 +12,12 @@ function App() {
   return (
     <div className="App">
       <ThemeToggle />
-      <div>
+      <main>
+        <h1>Guess Colors</h1>
         <ColorSwatch color={color} />
         <AnswerOptions answers={answers} onSelect={handleAnswerClicked} />
         <ResultMessage result={result} />
-      </div>
+      </main>
     </div>
   );
 }

@@ -18,6 +18,7 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 - Vite
 - Vitest + React Testing Library
 - Playwright + axe-core (end-to-end and accessibility testing)
+- Biome (linting and formatting)
 - pnpm
 
 ## 🖥️Development
@@ -50,6 +51,8 @@ pnpm test                # run the test suite
 pnpm run test:coverage   # run the test suite with a coverage report
 pnpm run e2e             # run end-to-end + accessibility tests (Playwright + axe)
 pnpm run e2e:ui          # run e2e tests with Playwright's interactive UI
+pnpm run lint            # check linting and formatting (Biome)
+pnpm run lint:fix        # fix linting and formatting issues in place
 ```
 
 ## 📂Project Structure

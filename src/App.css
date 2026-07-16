@@ -1,17 +1,17 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-:root{
-  --background: #FFF;
-  --font: #000
+:root {
+  --background: #fff;
+  --font: #000;
 }
 
-.darkmode{
+.darkmode {
   --background: #1b1c25;
-  --font: #ffffff
+  --font: #ffffff;
 }
 
 .App {
@@ -56,7 +56,7 @@ button + button {
   text-align: center;
 }
 
-.theme-button{
+.theme-button {
   position: absolute;
   top: 30px;
   right: 30px;

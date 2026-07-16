@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { gotoHome } from "./utils";
 
 test("toggles dark mode on and off via the theme button", async ({ page }) => {

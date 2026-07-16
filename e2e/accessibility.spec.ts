@@ -1,6 +1,6 @@
-import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { gotoHome, findAnswerButtons } from "./utils";
+import { expect, test } from "@playwright/test";
+import { findAnswerButtons, gotoHome } from "./utils";
 
 test("has no detectable accessibility violations on initial load", async ({
   page,

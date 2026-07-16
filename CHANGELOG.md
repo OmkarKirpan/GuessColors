@@ -11,6 +11,9 @@ number, most recent first.
 - End-to-end tests (Playwright) and automated accessibility scans (axe-core)
   covering the game flow, theme toggle, and initial/dark-mode/result states,
   wired into CI as a new `e2e` job alongside the existing unit test job.
+- Biome for linting and formatting, enforced in CI via a new `lint` step.
+- An `ErrorBoundary` around `<App />` so a rendering error shows a fallback
+  message instead of a blank page.
 
 ### Changed
 
@@ -23,6 +26,7 @@ number, most recent first.
   result message an announced live region (`role="status"`) and the theme
   toggle button reflect its pressed state (`aria-pressed`) — all surfaced by
   the new automated accessibility scans.
+- Removed leftover debug `console.log` calls in `useGuessColorsGame`.
 
 ## 2026-07-16
 

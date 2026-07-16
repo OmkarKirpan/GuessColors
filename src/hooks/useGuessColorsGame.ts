@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { generateRandomColor } from "../utils/color";
-import { shuffleArray } from "../utils/array";
+import { useCallback, useEffect, useState } from "react";
 import { Result } from "../types";
+import { shuffleArray } from "../utils/array";
+import { generateRandomColor } from "../utils/color";
 
 export function useGuessColorsGame() {
   const [color, setColor] = useState("");
   const [answers, setAnswers] = useState<string[]>([]);
   const [result, setResult] = useState<Result | undefined>(undefined);
 
-  const generateRandomColors = () => {
+  const generateRandomColors = useCallback(() => {
     const actualColor = generateRandomColor();
     const distractorColors = new Set<string>();
 
@@ -21,19 +21,17 @@ export function useGuessColorsGame() {
 
     setColor(actualColor);
     setAnswers(shuffleArray([actualColor, ...distractorColors]));
-  };
+  }, []);
 
   useEffect(() => {
     generateRandomColors();
-  }, []);
+  }, [generateRandomColors]);
 
   function handleAnswerClicked(answer: string): void {
     if (answer === color) {
-      console.log("Correct answer");
       setResult(Result.Correct);
       generateRandomColors();
     } else {
-      console.log("Wrong answer");
       setResult(Result.Wrong);
     }
   }

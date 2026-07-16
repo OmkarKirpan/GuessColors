@@ -1,13 +1,12 @@
 import "./App.css";
-import { ColorSwatch } from "./components/ColorSwatch";
 import { AnswerOptions } from "./components/AnswerOptions";
+import { ColorSwatch } from "./components/ColorSwatch";
 import { ResultMessage } from "./components/ResultMessage";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { useGuessColorsGame } from "./hooks/useGuessColorsGame";
 
 function App() {
-  const { color, answers, result, handleAnswerClicked } =
-    useGuessColorsGame();
+  const { color, answers, result, handleAnswerClicked } = useGuessColorsGame();
 
   return (
     <div className="App">

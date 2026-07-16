@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export function ThemeToggle() {
   const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.body.classList.contains("darkmode")
+    document.body.classList.contains("darkmode"),
   );
 
   function changeTheme() {
@@ -11,6 +11,7 @@ export function ThemeToggle() {
 
   return (
     <button
+      type="button"
       className="theme-button"
       aria-pressed={isDarkMode}
       onClick={changeTheme}

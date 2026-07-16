@@ -6,6 +6,7 @@ type ScoreBoardProps = {
   streak: number;
   highScore: number;
   bestStreak: number;
+  comboMultiplier: number;
 };
 
 const chipSpring = { type: "spring", stiffness: 500, damping: 20 } as const;
@@ -18,6 +19,7 @@ export function ScoreBoard({
   streak,
   highScore,
   bestStreak,
+  comboMultiplier,
 }: ScoreBoardProps) {
   const previousHighScore = useRef(highScore);
   const previousBestStreak = useRef(bestStreak);
@@ -82,6 +84,18 @@ export function ScoreBoard({
       >
         Best Streak: {bestStreak}
       </motion.span>
+      {comboMultiplier > 1 && (
+        <motion.span
+          key={`combo-${comboMultiplier}`}
+          initial={{ scale: 1.4 }}
+          animate={{ scale: 1 }}
+          transition={chipSpring}
+          className={`${baseChip} col-span-2 bg-fuchsia-200 text-fuchsia-950 dark:bg-fuchsia-500 dark:text-fuchsia-950`}
+        >
+          Combo ×{comboMultiplier}
+          <span aria-hidden="true"> 🔥</span>
+        </motion.span>
+      )}
     </div>
   );
 }

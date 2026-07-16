@@ -4,13 +4,45 @@ import { ScoreBoard } from "../components/ScoreBoard";
 
 test("renders all four stats with exact labels", () => {
   const { getByText } = render(
-    <ScoreBoard score={3} streak={2} highScore={7} bestStreak={4} />,
+    <ScoreBoard
+      score={3}
+      streak={2}
+      highScore={7}
+      bestStreak={4}
+      comboMultiplier={1}
+    />,
   );
 
   expect(getByText("Score: 3")).toBeInTheDocument();
   expect(getByText("Streak: 2")).toBeInTheDocument();
   expect(getByText("Best Score: 7")).toBeInTheDocument();
   expect(getByText("Best Streak: 4")).toBeInTheDocument();
+});
+
+test("shows a combo badge only when the multiplier exceeds one", () => {
+  const { queryByText, rerender } = render(
+    <ScoreBoard
+      score={2}
+      streak={2}
+      highScore={2}
+      bestStreak={2}
+      comboMultiplier={1}
+    />,
+  );
+
+  expect(queryByText(/Combo/)).not.toBeInTheDocument();
+
+  rerender(
+    <ScoreBoard
+      score={3}
+      streak={3}
+      highScore={3}
+      bestStreak={3}
+      comboMultiplier={2}
+    />,
+  );
+
+  expect(queryByText("Combo ×2", { exact: false })).toBeInTheDocument();
 });
 
 test("celebrates streak milestones with a flame, but not other streaks", () => {

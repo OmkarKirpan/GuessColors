@@ -1,10 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
-import { Result } from "../types";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { type Achievement, Result } from "../types";
+import { evaluateNewUnlocks, getAchievement } from "../utils/achievements";
 import { shuffleArray } from "../utils/array";
-import { generateRandomColor } from "../utils/color";
+import { generateDistractor, generateRandomColor } from "../utils/color";
+import {
+  BASE_POINTS,
+  getComboMultiplier,
+  getLevel,
+  getLevelProgress,
+} from "../utils/levels";
+import { playSound } from "../utils/sound";
 import { loadStats, saveStats } from "../utils/stats";
 
 const ANSWER_KEYS: Record<string, number> = { "1": 0, "2": 1, "3": 2 };
+
+export type PointsAwarded = { value: number; multiplier: number; id: number };
+export type LastAnswer = { answer: string; correct: boolean; id: number };
+export type EarnedAchievement = Achievement & { id: string; nonce: number };
 
 export function useGuessColorsGame() {
   const [color, setColor] = useState("");
@@ -12,15 +24,32 @@ export function useGuessColorsGame() {
   const [result, setResult] = useState<Result | undefined>(undefined);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [xp, setXp] = useState(0);
   const [stats, setStats] = useState(() => loadStats());
   const [shakeTrigger, setShakeTrigger] = useState(0);
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
+  const [levelUpTrigger, setLevelUpTrigger] = useState(0);
+  const [pointsAwarded, setPointsAwarded] = useState<PointsAwarded | null>(
+    null,
+  );
+  const [lastAnswer, setLastAnswer] = useState<LastAnswer | null>(null);
+  const [earnedAchievement, setEarnedAchievement] =
+    useState<EarnedAchievement | null>(null);
 
-  const generateRandomColors = useCallback(() => {
+  const level = getLevel(xp);
+  const comboMultiplier = getComboMultiplier(streak);
+  const levelProgress = getLevelProgress(xp);
+
+  // Monotonic id so effect-driven UI (floating score, button flash, toast) can
+  // key off a distinct value even when the underlying content repeats.
+  const eventIdRef = useRef(0);
+
+  const generateRound = useCallback((difficulty: number) => {
     const actualColor = generateRandomColor();
     const distractorColors = new Set<string>();
 
     while (distractorColors.size < 2) {
-      const candidate = generateRandomColor();
+      const candidate = generateDistractor(actualColor, difficulty);
       if (candidate !== actualColor && !distractorColors.has(candidate)) {
         distractorColors.add(candidate);
       }
@@ -30,40 +59,79 @@ export function useGuessColorsGame() {
     setAnswers(shuffleArray([actualColor, ...distractorColors]));
   }, []);
 
+  // Level 1 (difficulty 0) leaves the base color generation untouched.
   useEffect(() => {
-    generateRandomColors();
-  }, [generateRandomColors]);
-
-  useEffect(() => {
-    setStats((prev) => {
-      const nextHighScore = Math.max(prev.highScore, score);
-      const nextBestStreak = Math.max(prev.bestStreak, streak);
-      if (
-        nextHighScore === prev.highScore &&
-        nextBestStreak === prev.bestStreak
-      ) {
-        return prev;
-      }
-      const next = { highScore: nextHighScore, bestStreak: nextBestStreak };
-      saveStats(next);
-      return next;
-    });
-  }, [score, streak]);
+    generateRound(0);
+  }, [generateRound]);
 
   const handleAnswerClicked = useCallback(
     (answer: string): void => {
-      if (answer === color) {
-        setResult(Result.Correct);
-        setScore((s) => s + 1);
-        setStreak((s) => s + 1);
-        generateRandomColors();
-      } else {
+      eventIdRef.current += 1;
+      const eventId = eventIdRef.current;
+
+      if (answer !== color) {
         setResult(Result.Wrong);
         setStreak(0);
         setShakeTrigger((t) => t + 1);
+        setLastAnswer({ answer, correct: false, id: eventId });
+        playSound("wrong");
+        return;
       }
+
+      const nextScore = score + 1;
+      const nextStreak = streak + 1;
+      const multiplier = getComboMultiplier(nextStreak);
+      const gained = BASE_POINTS * multiplier;
+      const nextXp = xp + gained;
+      const nextLevel = getLevel(nextXp);
+      const leveledUp = nextLevel > level;
+
+      setResult(Result.Correct);
+      setScore(nextScore);
+      setStreak(nextStreak);
+      setXp(nextXp);
+      setPointsAwarded({ value: gained, multiplier, id: eventId });
+      setLastAnswer({ answer, correct: true, id: eventId });
+      setConfettiTrigger((t) => t + 1);
+      if (leveledUp) setLevelUpTrigger((t) => t + 1);
+
+      // Persist records and evaluate achievements against the new game state.
+      // Records only ever grow on a correct answer, so this is the single place
+      // stats need saving.
+      const bestStreak = Math.max(stats.bestStreak, nextStreak);
+      const newUnlocks = evaluateNewUnlocks(
+        {
+          score: nextScore,
+          streak: nextStreak,
+          bestStreak,
+          level: nextLevel,
+        },
+        stats.unlockedAchievements,
+      );
+      const nextStats = {
+        highScore: Math.max(stats.highScore, nextScore),
+        bestStreak,
+        bestLevel: Math.max(stats.bestLevel, nextLevel),
+        unlockedAchievements: newUnlocks.length
+          ? [...stats.unlockedAchievements, ...newUnlocks]
+          : stats.unlockedAchievements,
+      };
+      setStats(nextStats);
+      saveStats(nextStats);
+
+      if (newUnlocks.length) {
+        const unlocked = getAchievement(newUnlocks[0]);
+        if (unlocked) {
+          setEarnedAchievement({ ...unlocked, nonce: eventId });
+        }
+        playSound("achievement");
+      } else {
+        playSound(leveledUp ? "levelUp" : "correct");
+      }
+
+      generateRound(Math.max(0, nextLevel - 1));
     },
-    [color, generateRandomColors],
+    [color, score, streak, xp, level, stats, generateRound],
   );
 
   useEffect(() => {
@@ -89,9 +157,20 @@ export function useGuessColorsGame() {
     result,
     score,
     streak,
+    xp,
+    level,
+    comboMultiplier,
+    levelProgress,
     highScore: stats.highScore,
     bestStreak: stats.bestStreak,
+    bestLevel: stats.bestLevel,
+    unlockedAchievements: stats.unlockedAchievements,
     shakeTrigger,
+    confettiTrigger,
+    levelUpTrigger,
+    pointsAwarded,
+    lastAnswer,
+    earnedAchievement,
     handleAnswerClicked,
   };
 }

@@ -40,35 +40,35 @@ test("generates initial color", () => {
 
 test("checks for correct answer", () => {
   mockRandomSequence(
-    0.1, // actual color -> #199999
-    0.5, // distractor -> #7fffff
-    0.9, // distractor -> #e66665
+    0.1, // actual color -> #e09e3b
+    0.5, // distractor -> #28e4e4
+    0.9, // distractor -> #e61693
   );
 
   const { getByText, queryByText } = render(<App />);
 
-  fireEvent.click(getByText("#199999"));
+  fireEvent.click(getByText("#E09E3B"));
 
   expect(queryByText("Correct!")).toBeInTheDocument();
 });
 
 test("increments score and streak across consecutive correct answers", () => {
   mockRandomSequence(
-    0.1, // round 1 actual -> #199999
-    0.5, // round 1 distractor -> #7fffff
-    0.9, // round 1 distractor -> #e66665
+    0.1, // round 1 actual -> #e09e3b
+    0.5, // round 1 distractor -> #28e4e4
+    0.9, // round 1 distractor -> #e61693
   );
 
   const { getByText } = render(<App />);
 
-  fireEvent.click(getByText("#199999"));
+  fireEvent.click(getByText("#E09E3B"));
 
   expect(getByText("Score: 1")).toBeInTheDocument();
   expect(getByText("Streak: 1")).toBeInTheDocument();
 
   // Round 1's own shuffle consumes two cycling values before round 2 draws
-  // its colors, so round 2's actual color is #599999 (cycling[2] = 0.35).
-  fireEvent.click(getByText("#599999"));
+  // its colors, so round 2's actual color is #45e956 (cycling[2] = 0.35).
+  fireEvent.click(getByText("#45E956"));
 
   expect(getByText("Score: 2")).toBeInTheDocument();
   expect(getByText("Streak: 2")).toBeInTheDocument();
@@ -76,18 +76,18 @@ test("increments score and streak across consecutive correct answers", () => {
 
 test("resets streak but keeps score after a wrong answer", () => {
   mockRandomSequence(
-    0.1, // round 1 actual -> #199999
-    0.5, // round 1 distractor -> #7fffff
-    0.9, // round 1 distractor -> #e66665
+    0.1, // round 1 actual -> #e09e3b
+    0.5, // round 1 distractor -> #28e4e4
+    0.9, // round 1 distractor -> #e61693
   );
 
   const { getByText } = render(<App />);
 
-  fireEvent.click(getByText("#199999"));
+  fireEvent.click(getByText("#E09E3B"));
   expect(getByText("Streak: 1")).toBeInTheDocument();
 
-  // Round 2's actual color is #599999; #A66665 is one of its distractors.
-  fireEvent.click(getByText("#A66665"));
+  // Round 2's actual color is #45e956; #1C2DCE is one of its distractors.
+  fireEvent.click(getByText("#1C2DCE"));
 
   expect(getByText("Score: 1")).toBeInTheDocument();
   expect(getByText("Streak: 0")).toBeInTheDocument();
@@ -95,14 +95,14 @@ test("resets streak but keeps score after a wrong answer", () => {
 
 test("persists the best score and streak across a remount, resetting the session totals", () => {
   mockRandomSequence(
-    0.1, // actual -> #199999
-    0.5, // distractor -> #7fffff
-    0.9, // distractor -> #e66665
+    0.1, // actual -> #e09e3b
+    0.5, // distractor -> #28e4e4
+    0.9, // distractor -> #e61693
   );
 
   const { getByText, unmount } = render(<App />);
 
-  fireEvent.click(getByText("#199999"));
+  fireEvent.click(getByText("#E09E3B"));
   expect(getByText("Best Score: 1")).toBeInTheDocument();
   expect(getByText("Best Streak: 1")).toBeInTheDocument();
 
@@ -119,12 +119,12 @@ test("persists the best score and streak across a remount, resetting the session
 
 test("selects an answer with the 1/2/3 number keys", () => {
   mockRandomSequence(
-    0.1, // actual -> #199999
-    0.5, // distractor -> #7fffff
-    0.9, // distractor -> #e66665
+    0.1, // actual -> #e09e3b
+    0.5, // distractor -> #28e4e4
+    0.9, // distractor -> #e61693
   );
 
-  // The post-shuffle button order for this seed is #7FFFFF, #E66665, #199999.
+  // The post-shuffle button order for this seed is #28E4E4, #E61693, #E09E3B.
   const { queryByText } = render(<App />);
 
   fireEvent.keyDown(window, { key: "3" });
@@ -134,9 +134,9 @@ test("selects an answer with the 1/2/3 number keys", () => {
 
 test("ignores number keys held with a modifier, and unmapped keys", () => {
   mockRandomSequence(
-    0.1, // actual -> #199999
-    0.5, // distractor -> #7fffff
-    0.9, // distractor -> #e66665
+    0.1, // actual -> #e09e3b
+    0.5, // distractor -> #28e4e4
+    0.9, // distractor -> #e61693
   );
 
   const { queryByText } = render(<App />);
@@ -150,14 +150,14 @@ test("ignores number keys held with a modifier, and unmapped keys", () => {
 
 test("checks for wrong answer", () => {
   mockRandomSequence(
-    0.1, // actual color -> #199999
-    0.5, // distractor -> #7fffff
-    0.9, // distractor -> #e66665
+    0.1, // actual color -> #e09e3b
+    0.5, // distractor -> #28e4e4
+    0.9, // distractor -> #e61693
   );
 
   const { getByText, queryByText } = render(<App />);
 
-  fireEvent.click(getByText("#7FFFFF"));
+  fireEvent.click(getByText("#28E4E4"));
 
   expect(queryByText("Wrong Answer")).toBeInTheDocument();
 });
@@ -176,11 +176,11 @@ test("toggles dark mode on and off via the theme button", () => {
 
 test("does not render duplicate answer colors when random draws collide", () => {
   mockRandomSequence(
-    0.1, // actual -> #199999
+    0.1, // actual -> #e09e3b
     0.1, // candidate collides with actual, rejected
-    0.5, // distractor -> #7fffff
+    0.5, // distractor -> #28e4e4
     0.5, // candidate collides with the distractor above, rejected
-    0.9, // distractor -> #e66665
+    0.9, // distractor -> #e61693
   );
 
   const { getAllByText } = render(<App />);
@@ -194,15 +194,15 @@ test("does not render duplicate answer colors when random draws collide", () => 
 
 test("starts a new round immediately after a correct answer", () => {
   mockRandomSequence(
-    0.1, // round 1 actual -> #199999
-    0.5, // round 1 distractor -> #7fffff
-    0.9, // round 1 distractor -> #e66665
+    0.1, // round 1 actual -> #e09e3b
+    0.5, // round 1 distractor -> #28e4e4
+    0.9, // round 1 distractor -> #e61693
   );
 
   const { getByText, queryByText, getByTestId } = render(<App />);
   const initialBackground = getByTestId("guess-me").style.background;
 
-  fireEvent.click(getByText("#199999"));
+  fireEvent.click(getByText("#E09E3B"));
 
   expect(queryByText("Correct!")).toBeInTheDocument();
   expect(getByTestId("guess-me").style.background).not.toBe(initialBackground);
@@ -210,23 +210,23 @@ test("starts a new round immediately after a correct answer", () => {
 
 test("keeps the same round after a wrong answer, and can recover on the next guess", () => {
   mockRandomSequence(
-    0.1, // actual -> #199999
-    0.5, // distractor -> #7fffff
-    0.9, // distractor -> #e66665
+    0.1, // actual -> #e09e3b
+    0.5, // distractor -> #28e4e4
+    0.9, // distractor -> #e61693
   );
 
   const { getByText, queryByText, getByTestId } = render(<App />);
   const backgroundBeforeWrongGuess = getByTestId("guess-me").style.background;
 
-  fireEvent.click(getByText("#7FFFFF"));
+  fireEvent.click(getByText("#28E4E4"));
 
   expect(queryByText("Wrong Answer")).toBeInTheDocument();
   expect(getByTestId("guess-me").style.background).toBe(
     backgroundBeforeWrongGuess,
   );
-  expect(getByText("#199999")).toBeInTheDocument();
+  expect(getByText("#E09E3B")).toBeInTheDocument();
 
-  fireEvent.click(getByText("#199999"));
+  fireEvent.click(getByText("#E09E3B"));
 
   expect(queryByText("Correct!")).toBeInTheDocument();
 });

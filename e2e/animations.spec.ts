@@ -1,30 +1,33 @@
 import { expect, test } from "@playwright/test";
 import { findAnswerButtons, gotoHome } from "./utils";
 
-test("applies a shake animation to the swatch on a wrong answer", async ({
-  page,
-}) => {
+test("shakes the swatch on a wrong answer", async ({ page }) => {
   await gotoHome(page);
 
   const { wrong } = await findAnswerButtons(page);
   await wrong.click();
 
+  // The motion-driven shake exposes its lifecycle through data-shaking:
+  // flipped on when the animation starts and back off when it completes.
   const swatch = page.getByTestId("guess-me");
-  await expect(swatch).toHaveClass(/shake/);
-  await expect(swatch).toHaveCSS("animation-name", "shake");
+  await expect(swatch).toHaveAttribute("data-shaking", "true");
+  await expect(swatch).toHaveAttribute("data-shaking", "false");
 });
 
-test("disables the shake animation under prefers-reduced-motion", async ({
-  page,
-}) => {
+test("does not shake under prefers-reduced-motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await gotoHome(page);
 
   const { wrong } = await findAnswerButtons(page);
   await wrong.click();
 
+  // Wait for the wrong answer to register before asserting the shake never
+  // started: no data-shaking flip and no transform written to the element.
+  await expect(page.getByText("Wrong Answer")).toBeVisible();
+
   const swatch = page.getByTestId("guess-me");
-  await expect(swatch).toHaveCSS("animation-name", "none");
+  await expect(swatch).toHaveAttribute("data-shaking", "false");
+  await expect(swatch).toHaveCSS("transform", "none");
 });
 
 test("persists best score and streak across a reload, resetting the session totals", async ({

@@ -53,6 +53,8 @@ pnpm run e2e             # run end-to-end + accessibility tests (Playwright + ax
 pnpm run e2e:ui          # run e2e tests with Playwright's interactive UI
 pnpm run lint            # check linting and formatting (Biome)
 pnpm run lint:fix        # fix linting and formatting issues in place
+pnpm run format          # fix formatting only (no lint rules)
+pnpm run format:check    # check formatting only, without fixing
 ```
 
 ## 📂Project Structure

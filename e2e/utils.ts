@@ -31,15 +31,20 @@ async function getSwatchRgb(page: Page): Promise<[number, number, number]> {
 // module-level Math.random() calls (used internally for React's fiber
 // property key suffixes) on every fresh page load, consuming values ahead of
 // the app's own hook in a way a plain queued mock doesn't account for.
-export async function findAnswerButtons(
-  page: Page,
-): Promise<{ correct: Locator; wrong: Locator }> {
+export async function findAnswerButtons(page: Page): Promise<{
+  correct: Locator;
+  wrong: Locator;
+  correctIndex: number;
+  wrongIndex: number;
+}> {
   const buttons = page.getByRole("button", { name: /^#[0-9A-F]{6}$/ });
   const swatchRgb = await getSwatchRgb(page);
 
   const count = await buttons.count();
   let correct: Locator | undefined;
   let wrong: Locator | undefined;
+  let correctIndex: number | undefined;
+  let wrongIndex: number | undefined;
 
   for (let i = 0; i < count; i++) {
     const button = buttons.nth(i);
@@ -48,14 +53,21 @@ export async function findAnswerButtons(
     const isMatch = rgb.every((value, index) => value === swatchRgb[index]);
     if (isMatch) {
       correct = button;
+      correctIndex = i;
     } else if (!wrong) {
       wrong = button;
+      wrongIndex = i;
     }
   }
 
-  if (!correct || !wrong) {
+  if (
+    !correct ||
+    !wrong ||
+    correctIndex === undefined ||
+    wrongIndex === undefined
+  ) {
     throw new Error("Could not determine correct/wrong answer buttons");
   }
 
-  return { correct, wrong };
+  return { correct, wrong, correctIndex, wrongIndex };
 }

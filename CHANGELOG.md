@@ -8,6 +8,28 @@ number, most recent first.
 
 ### Added
 
+- Gamification layer on top of the score/streak base:
+  - **XP and levels** — each correct answer awards points that fill an animated
+    level progress bar (`XpBar`); reaching a new level pops the bar and fires a
+    celebration. XP/level math lives in `src/utils/levels.ts`.
+  - **Combo multiplier** — consecutive correct answers raise a point multiplier
+    (up to ×5), surfaced as a `Combo ×N 🔥` badge and applied to XP.
+  - **Difficulty progression** — distractor colors get progressively closer to
+    the target as the level climbs (`generateDistractor` in `src/utils/color.ts`);
+    level 1 is unchanged, so the base game stays approachable.
+  - **Achievements** — unlockable badges (first win, score/streak/level
+    milestones) defined in `src/utils/achievements.ts`, announced via a toast
+    (`AchievementToast`) and persisted in `localStorage`.
+- Micro-interactions, all respecting `prefers-reduced-motion`:
+  - A **confetti burst** (`Confetti`) on correct answers.
+  - **Floating `+N ×combo` score popups** (`FloatingScore`) rising from the swatch.
+  - **Correct/wrong button flashes** on the answer options.
+  - **Sound effects** (WebAudio blips for correct/wrong/level-up/achievement) via
+    `src/utils/sound.ts`, with a persisted **mute toggle** (`SoundToggle`) beside
+    the theme toggle. Audio degrades to a safe no-op where WebAudio is
+    unavailable.
+- Persistence (`src/utils/stats.ts`) now also tracks the best level reached and
+  unlocked achievements, with backward-compatible loading of older saves.
 - A playful visual redesign built on Tailwind CSS v4: gradient page background,
   centered game card, pill-style score chips, chunky answer buttons with
   visible 1/2/3 key hints, a bundled Nunito font, and a glow on the swatch

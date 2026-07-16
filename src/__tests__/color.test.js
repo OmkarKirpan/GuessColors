@@ -1,4 +1,4 @@
-import { generateRandomColor } from "../utils/color";
+import { generateDistractor, generateRandomColor } from "../utils/color";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -32,5 +32,32 @@ test("always generates vivid colors visible on light and dark backgrounds", () =
     // (never near-black) and real chroma spread (never near-white or gray).
     expect(max).toBeGreaterThanOrEqual(160);
     expect(max - min).toBeGreaterThanOrEqual(90);
+  }
+});
+
+test("generateDistractor at difficulty 0 ignores the target and matches the base generator", () => {
+  vi.spyOn(Math, "random").mockReturnValue(0.1);
+
+  // Same single draw as generateRandomColor -> same result, target unused.
+  expect(generateDistractor("#ffffff", 0)).toBe("#e09e3b");
+});
+
+test("generateDistractor at higher difficulty stays a valid vivid color", () => {
+  const target = generateRandomColor();
+
+  for (let i = 0; i < 200; i++) {
+    const difficulty = 1 + (i % 6);
+    const color = generateDistractor(target, difficulty);
+    expect(color).toMatch(/^#[0-9a-f]{6}$/);
+
+    const channels = [1, 3, 5].map((offset) =>
+      Number.parseInt(color.slice(offset, offset + 2), 16),
+    );
+    const max = Math.max(...channels);
+    const min = Math.min(...channels);
+
+    // Clamped to the same vivid gamut as the target swatch.
+    expect(max).toBeGreaterThanOrEqual(150);
+    expect(max - min).toBeGreaterThanOrEqual(70);
   }
 });

@@ -6,10 +6,23 @@ number, most recent first.
 
 ## [Unreleased]
 
+### Added
+
+- End-to-end tests (Playwright) and automated accessibility scans (axe-core)
+  covering the game flow, theme toggle, and initial/dark-mode/result states,
+  wired into CI as a new `e2e` job alongside the existing unit test job.
+
 ### Changed
 
 - Updated the README to reflect the current tooling and `src/` project
   structure.
+
+### Fixed
+
+- Added a `<main>` landmark and a level-one heading to the page, and made the
+  result message an announced live region (`role="status"`) and the theme
+  toggle button reflect its pressed state (`aria-pressed`) — all surfaced by
+  the new automated accessibility scans.
 
 ## 2026-07-16
 

@@ -17,6 +17,7 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 - TypeScript
 - Vite
 - Vitest + React Testing Library
+- Playwright + axe-core (end-to-end and accessibility testing)
 - pnpm
 
 ## 🖥️Development
@@ -47,6 +48,8 @@ pnpm run build           # type-check and build for production
 pnpm run preview         # preview the production build locally
 pnpm test                # run the test suite
 pnpm run test:coverage   # run the test suite with a coverage report
+pnpm run e2e             # run end-to-end + accessibility tests (Playwright + axe)
+pnpm run e2e:ui          # run e2e tests with Playwright's interactive UI
 ```
 
 ## 📂Project Structure
@@ -56,6 +59,7 @@ pnpm run test:coverage   # run the test suite with a coverage report
 - `src/utils/color.ts` — random color generation
 - `src/types.ts` — shared types
 - `src/App.tsx` — composes the hook and components together
+- `e2e/` — Playwright end-to-end and accessibility (axe-core) tests
 
 ## 💻Deployment
 

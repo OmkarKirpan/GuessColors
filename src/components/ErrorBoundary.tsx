@@ -25,8 +25,13 @@ export class ErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="App" role="alert">
-          <p>Something went wrong. Please refresh the page to try again.</p>
+        <div
+          role="alert"
+          className="grid min-h-full place-items-center bg-rose-50 p-8 text-center font-sans dark:bg-slate-900"
+        >
+          <p className="text-lg font-bold text-slate-900 dark:text-slate-100">
+            Something went wrong. Please refresh the page to try again.
+          </p>
         </div>
       );
     }

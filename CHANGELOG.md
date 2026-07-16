@@ -8,6 +8,16 @@ number, most recent first.
 
 ### Added
 
+- A playful visual redesign built on Tailwind CSS v4: gradient page background,
+  centered game card, pill-style score chips, chunky answer buttons with
+  visible 1/2/3 key hints, a bundled Nunito font, and a glow on the swatch
+  derived from its current color. Dark mode restyled to match.
+- Springy animations via the `motion` library: score chips pop when they
+  change, best-score/best-streak chips flash amber when a record is beaten,
+  the streak chip celebrates every 5-streak milestone with a 🔥, the result
+  message pops in, and buttons respond to hover/press. All motion respects
+  `prefers-reduced-motion`.
+
 - End-to-end tests (Playwright) and automated accessibility scans (axe-core)
   covering the game flow, theme toggle, and initial/dark-mode/result states,
   wired into CI as a new `e2e` job alongside the existing unit test job.
@@ -24,11 +34,22 @@ number, most recent first.
 
 ### Changed
 
+- Replaced the hand-written CSS (`src/App.css`) with Tailwind utility classes;
+  `src/index.css` is now the single stylesheet entry, and the shake animation
+  moved from CSS keyframes to a `motion`-driven spring that exposes its
+  lifecycle via a `data-shaking` attribute (the animation e2e tests assert
+  that instead of CSS `animation-name`).
+- Upgraded TypeScript to 5.x with `moduleResolution: "bundler"` (required by
+  `motion` and `@tailwindcss/vite`).
 - Updated the README to reflect the current tooling and `src/` project
   structure.
 
 ### Fixed
 
+- `generateRandomColor()` (`src/utils/color.ts`) now generates colors in HSL
+  with clamped saturation (65–90%) and lightness (45–60%), so a swatch can no
+  longer be near-white, near-black, or gray and blend into the page background
+  in either theme.
 - Added a `<main>` landmark and a level-one heading to the page, and made the
   result message an announced live region (`role="status"`) and the theme
   toggle button reflect its pressed state (`aria-pressed`) — all surfaced by

@@ -20,6 +20,8 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 - React
 - TypeScript
 - Vite
+- Tailwind CSS
+- Motion (animations)
 - Vitest + React Testing Library
 - Playwright + axe-core (end-to-end and accessibility testing)
 - Biome (linting and formatting)

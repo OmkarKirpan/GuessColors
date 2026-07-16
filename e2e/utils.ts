@@ -48,8 +48,10 @@ export async function findAnswerButtons(page: Page): Promise<{
 
   for (let i = 0; i < count; i++) {
     const button = buttons.nth(i);
+    // textContent includes the visual 1/2/3 key hint, so pull out the hex.
     const text = await button.textContent();
-    const rgb = hexToRgb(text ?? "");
+    const hex = text?.match(/#[0-9A-F]{6}/)?.[0];
+    const rgb = hexToRgb(hex ?? "");
     const isMatch = rgb.every((value, index) => value === swatchRgb[index]);
     if (isMatch) {
       correct = button;

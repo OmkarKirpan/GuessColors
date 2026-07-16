@@ -6,8 +6,13 @@ type AnswerOptionsProps = {
 export function AnswerOptions({ answers, onSelect }: AnswerOptionsProps) {
   return (
     <>
-      {answers.map((answer) => (
-        <button type="button" onClick={() => onSelect(answer)} key={answer}>
+      {answers.map((answer, index) => (
+        <button
+          type="button"
+          onClick={() => onSelect(answer)}
+          key={answer}
+          aria-keyshortcuts={String(index + 1)}
+        >
           {answer.toUpperCase()}
         </button>
       ))}

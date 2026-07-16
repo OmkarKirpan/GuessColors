@@ -9,6 +9,10 @@ This is a simple color guessing game built with React.js and Vite.js. The game i
 - Click on the button that corresponds to the color of the box.
 - If you select the correct color, you will see a "Correct!" message.
 - If you select the wrong color, you will see a "Wrong Answer" message.
+- You can also press 1, 2, or 3 on your keyboard to pick the corresponding
+  answer button.
+- Your score and streak are tracked as you play, and your best score and
+  best streak are saved so they're there next time you visit.
 - Keep playing to test your color recognition skills!
 
 ## 💻Technologies Used
@@ -59,9 +63,10 @@ pnpm run format:check    # check formatting only, without fixing
 
 ## 📂Project Structure
 
-- `src/hooks/useGuessColorsGame.ts` — game state and logic (color generation, answer checking)
-- `src/components/` — presentational components (`ColorSwatch`, `AnswerOptions`, `ResultMessage`, `ThemeToggle`)
+- `src/hooks/useGuessColorsGame.ts` — game state and logic (color generation, answer checking, score/streak, keyboard play)
+- `src/components/` — presentational components (`ColorSwatch`, `AnswerOptions`, `ResultMessage`, `ThemeToggle`, `ScoreBoard`)
 - `src/utils/color.ts` — random color generation
+- `src/utils/stats.ts` — `localStorage` persistence for the all-time high score and best streak
 - `src/types.ts` — shared types
 - `src/App.tsx` — composes the hook and components together
 - `e2e/` — Playwright end-to-end and accessibility (axe-core) tests

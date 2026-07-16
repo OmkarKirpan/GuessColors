@@ -28,6 +28,48 @@
   height: 200px;
   margin-bottom: 20px;
   border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-4px);
+  }
+  40%,
+  60% {
+    transform: translateX(4px);
+  }
+}
+
+.guess-me.shake {
+  animation: shake 0.4s ease;
+}
+
+.score-board {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guess-me {
+    transition: none;
+  }
+
+  .guess-me.shake {
+    animation: none;
+  }
 }
 
 button {

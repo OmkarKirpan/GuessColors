@@ -5,6 +5,7 @@ import App from "../App";
 afterEach(() => {
   vi.restoreAllMocks();
   document.body.classList.remove("darkmode");
+  localStorage.clear();
 });
 
 // Queues exact Math.random values for the calls a test cares about (e.g. the
@@ -49,6 +50,102 @@ test("checks for correct answer", () => {
   fireEvent.click(getByText("#199999"));
 
   expect(queryByText("Correct!")).toBeInTheDocument();
+});
+
+test("increments score and streak across consecutive correct answers", () => {
+  mockRandomSequence(
+    0.1, // round 1 actual -> #199999
+    0.5, // round 1 distractor -> #7fffff
+    0.9, // round 1 distractor -> #e66665
+  );
+
+  const { getByText } = render(<App />);
+
+  fireEvent.click(getByText("#199999"));
+
+  expect(getByText("Score: 1")).toBeInTheDocument();
+  expect(getByText("Streak: 1")).toBeInTheDocument();
+
+  // Round 1's own shuffle consumes two cycling values before round 2 draws
+  // its colors, so round 2's actual color is #599999 (cycling[2] = 0.35).
+  fireEvent.click(getByText("#599999"));
+
+  expect(getByText("Score: 2")).toBeInTheDocument();
+  expect(getByText("Streak: 2")).toBeInTheDocument();
+});
+
+test("resets streak but keeps score after a wrong answer", () => {
+  mockRandomSequence(
+    0.1, // round 1 actual -> #199999
+    0.5, // round 1 distractor -> #7fffff
+    0.9, // round 1 distractor -> #e66665
+  );
+
+  const { getByText } = render(<App />);
+
+  fireEvent.click(getByText("#199999"));
+  expect(getByText("Streak: 1")).toBeInTheDocument();
+
+  // Round 2's actual color is #599999; #A66665 is one of its distractors.
+  fireEvent.click(getByText("#A66665"));
+
+  expect(getByText("Score: 1")).toBeInTheDocument();
+  expect(getByText("Streak: 0")).toBeInTheDocument();
+});
+
+test("persists the best score and streak across a remount, resetting the session totals", () => {
+  mockRandomSequence(
+    0.1, // actual -> #199999
+    0.5, // distractor -> #7fffff
+    0.9, // distractor -> #e66665
+  );
+
+  const { getByText, unmount } = render(<App />);
+
+  fireEvent.click(getByText("#199999"));
+  expect(getByText("Best Score: 1")).toBeInTheDocument();
+  expect(getByText("Best Streak: 1")).toBeInTheDocument();
+
+  unmount();
+
+  mockRandomSequence(0.1, 0.5, 0.9);
+  const { getByText: getByTextAgain } = render(<App />);
+
+  expect(getByTextAgain("Score: 0")).toBeInTheDocument();
+  expect(getByTextAgain("Streak: 0")).toBeInTheDocument();
+  expect(getByTextAgain("Best Score: 1")).toBeInTheDocument();
+  expect(getByTextAgain("Best Streak: 1")).toBeInTheDocument();
+});
+
+test("selects an answer with the 1/2/3 number keys", () => {
+  mockRandomSequence(
+    0.1, // actual -> #199999
+    0.5, // distractor -> #7fffff
+    0.9, // distractor -> #e66665
+  );
+
+  // The post-shuffle button order for this seed is #7FFFFF, #E66665, #199999.
+  const { queryByText } = render(<App />);
+
+  fireEvent.keyDown(window, { key: "3" });
+
+  expect(queryByText("Correct!")).toBeInTheDocument();
+});
+
+test("ignores number keys held with a modifier, and unmapped keys", () => {
+  mockRandomSequence(
+    0.1, // actual -> #199999
+    0.5, // distractor -> #7fffff
+    0.9, // distractor -> #e66665
+  );
+
+  const { queryByText } = render(<App />);
+
+  fireEvent.keyDown(window, { key: "3", ctrlKey: true });
+  fireEvent.keyDown(window, { key: "9" });
+
+  expect(queryByText("Correct!")).not.toBeInTheDocument();
+  expect(queryByText("Wrong Answer")).not.toBeInTheDocument();
 });
 
 test("checks for wrong answer", () => {

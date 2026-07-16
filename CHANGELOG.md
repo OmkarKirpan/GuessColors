@@ -14,6 +14,13 @@ number, most recent first.
 - Biome for linting and formatting, enforced in CI via a new `lint` step.
 - An `ErrorBoundary` around `<App />` so a rendering error shows a fallback
   message instead of a blank page.
+- Score and streak tracking (`ScoreBoard`), with the all-time high score and
+  best streak persisted in `localStorage` (`src/utils/stats.ts`) so they
+  survive page reloads — the running score/streak reset each session.
+- Keyboard play: press 1, 2, or 3 to pick the corresponding answer button.
+- A smooth color transition on the swatch when a new round starts, and a
+  shake effect on a wrong answer, both disabled under
+  `prefers-reduced-motion`.
 
 ### Changed
 

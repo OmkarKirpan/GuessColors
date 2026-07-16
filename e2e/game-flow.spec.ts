@@ -43,3 +43,28 @@ test("clicking a wrong answer keeps the round going and can recover", async ({
 
   await expect(page.getByText("Correct!")).toBeVisible();
 });
+
+test("tracks score and streak across correct and wrong answers", async ({
+  page,
+}) => {
+  await gotoHome(page);
+
+  await expect(page.getByText("Score: 0", { exact: true })).toBeVisible();
+  await expect(page.getByText("Streak: 0", { exact: true })).toBeVisible();
+
+  const round1 = await findAnswerButtons(page);
+  await round1.correct.click();
+
+  await expect(page.getByText("Score: 1", { exact: true })).toBeVisible();
+  await expect(page.getByText("Streak: 1", { exact: true })).toBeVisible();
+
+  // The swatch's background-color transitions over 0.3s; let it settle
+  // before re-deriving the correct/wrong buttons from its rendered color.
+  await page.waitForTimeout(350);
+
+  const round2 = await findAnswerButtons(page);
+  await round2.wrong.click();
+
+  await expect(page.getByText("Score: 1", { exact: true })).toBeVisible();
+  await expect(page.getByText("Streak: 0", { exact: true })).toBeVisible();
+});

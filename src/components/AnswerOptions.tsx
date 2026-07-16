@@ -15,9 +15,6 @@ const baseButton =
 const idleButton =
   "border-violet-300 bg-violet-100 text-slate-900 focus-visible:ring-violet-500 dark:border-violet-950 dark:bg-slate-700 dark:text-slate-100 dark:focus-visible:ring-violet-400";
 
-const correctButton =
-  "border-green-500 bg-green-200 text-green-950 focus-visible:ring-green-500 dark:border-green-400 dark:bg-green-500 dark:text-green-950";
-
 const wrongButton =
   "border-rose-500 bg-rose-200 text-rose-950 focus-visible:ring-rose-500 dark:border-rose-400 dark:bg-rose-500 dark:text-rose-950";
 
@@ -29,14 +26,10 @@ export function AnswerOptions({
   return (
     <div className="flex w-full flex-col gap-3 sm:flex-row">
       {answers.map((answer, index) => {
-        const flashed = lastAnswer?.answer === answer;
-        const flashCorrect = flashed && lastAnswer?.correct;
-        const flashWrong = flashed && lastAnswer && !lastAnswer.correct;
-        const stateClass = flashCorrect
-          ? correctButton
-          : flashWrong
-            ? wrongButton
-            : idleButton;
+        // A correct answer immediately regenerates the round (new buttons), so
+        // only a wrong answer's button lingers to be flashed — the correct cue
+        // lives on the persistent swatch (see SuccessPulse) instead.
+        const flashWrong = lastAnswer?.answer === answer && !lastAnswer.correct;
 
         return (
           <motion.button
@@ -44,18 +37,12 @@ export function AnswerOptions({
             onClick={() => onSelect(answer)}
             key={answer}
             aria-keyshortcuts={String(index + 1)}
-            data-flash={
-              flashCorrect ? "correct" : flashWrong ? "wrong" : "none"
-            }
+            data-flash={flashWrong ? "wrong" : "none"}
             whileHover={{ y: -3 }}
             whileTap={{ scale: 0.92 }}
-            animate={
-              flashed
-                ? { scale: [1, flashCorrect ? 1.06 : 0.97, 1] }
-                : { scale: 1 }
-            }
+            animate={flashWrong ? { scale: [1, 0.97, 1] } : { scale: 1 }}
             transition={buttonSpring}
-            className={`${baseButton} ${stateClass}`}
+            className={`${baseButton} ${flashWrong ? wrongButton : idleButton}`}
           >
             {/* biome-ignore lint/a11y/noAriaHiddenOnFocusable: the <kbd> hint is decorative and not focusable; hiding it keeps the button's accessible name exactly the hex label */}
             <kbd

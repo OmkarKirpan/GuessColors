@@ -20,16 +20,27 @@ number, most recent first.
   - **Achievements** — unlockable badges (first win, score/streak/level
     milestones) defined in `src/utils/achievements.ts`, announced via a toast
     (`AchievementToast`) and persisted in `localStorage`.
+  - **Achievements gallery** — a persistent `AchievementsBar` shows every badge
+    (dimmed while locked, lit once earned) with an earned/total count, so the
+    collection is visible beyond the fleeting unlock toast. Unlocked state is
+    conveyed via `aria-label`, not color alone.
 - Micro-interactions, all respecting `prefers-reduced-motion`:
   - A **confetti burst** (`Confetti`) on correct answers.
+  - A **success pulse** (`SuccessPulse`) — a green ring flash over the swatch on
+    a correct answer. (The swatch stays mounted across rounds, so the "correct"
+    cue lives there; a correct guess regenerates the answer buttons immediately,
+    which is why the button flash is reserved for wrong answers.)
   - **Floating `+N ×combo` score popups** (`FloatingScore`) rising from the swatch.
-  - **Correct/wrong button flashes** on the answer options.
+  - A **wrong-answer button flash** on the option that was missed.
   - **Sound effects** (WebAudio blips for correct/wrong/level-up/achievement) via
     `src/utils/sound.ts`, with a persisted **mute toggle** (`SoundToggle`) beside
     the theme toggle. Audio degrades to a safe no-op where WebAudio is
     unavailable.
-- Persistence (`src/utils/stats.ts`) now also tracks the best level reached and
-  unlocked achievements, with backward-compatible loading of older saves.
+- Persistence (`src/utils/stats.ts`) now also tracks accumulated **XP** and
+  unlocked achievements, with backward-compatible loading of older saves. XP —
+  and therefore level and difficulty — is long-term progression that carries
+  across reloads, so a returning player resumes at their earned level and
+  difficulty (score and streak still reset each session).
 - A playful visual redesign built on Tailwind CSS v4: gradient page background,
   centered game card, pill-style score chips, chunky answer buttons with
   visible 1/2/3 key hints, a bundled Nunito font, and a glow on the swatch
